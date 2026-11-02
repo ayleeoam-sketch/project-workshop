@@ -20,9 +20,9 @@ export const Route = createFileRoute("/generate")({
 
 function Generate() {
   const active = sampleTemplates.filter((t) => t.status === "active");
-  const [templateId, setTemplateId] = useState(active[0].id);
+  const [templateId, setTemplateId] = useState(active[0]?.id ?? "");
   const [values, setValues] = useState<Record<string, string>>({});
-  const template = active.find((t) => t.id === templateId)!;
+  const template = active.find((t) => t.id === templateId) ?? active[0]!;
 
   return (
     <>
