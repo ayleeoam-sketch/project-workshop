@@ -14,16 +14,348 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      activity_logs: {
+        Row: {
+          action: string
+          actor_id: string
+          created_at: string
+          details: Json
+          entity_id: string | null
+          entity_type: string
+          id: string
+        }
+        Insert: {
+          action: string
+          actor_id?: string
+          created_at?: string
+          details?: Json
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string
+          created_at?: string
+          details?: Json
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      app_settings: {
+        Row: {
+          business_name: string
+          id: number
+          max_upload_mb: number
+          updated_at: string
+        }
+        Insert: {
+          business_name?: string
+          id?: number
+          max_upload_mb?: number
+          updated_at?: string
+        }
+        Update: {
+          business_name?: string
+          id?: number
+          max_upload_mb?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      document_data: {
+        Row: {
+          data: Json
+          document_id: string
+        }
+        Insert: {
+          data?: Json
+          document_id: string
+        }
+        Update: {
+          data?: Json
+          document_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_data_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: true
+            referencedRelation: "generated_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      generated_documents: {
+        Row: {
+          batch_id: string | null
+          created_at: string
+          format: string
+          generated_by: string
+          id: string
+          storage_path: string
+          template_id: string | null
+          template_name: string
+          title: string
+        }
+        Insert: {
+          batch_id?: string | null
+          created_at?: string
+          format: string
+          generated_by?: string
+          id?: string
+          storage_path: string
+          template_id?: string | null
+          template_name?: string
+          title: string
+        }
+        Update: {
+          batch_id?: string | null
+          created_at?: string
+          format?: string
+          generated_by?: string
+          id?: string
+          storage_path?: string
+          template_id?: string | null
+          template_name?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "generated_documents_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      template_assignments: {
+        Row: {
+          template_id: string
+          user_id: string
+        }
+        Insert: {
+          template_id: string
+          user_id: string
+        }
+        Update: {
+          template_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "template_assignments_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "template_assignments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      template_fields: {
+        Row: {
+          field_type: string
+          id: string
+          key: string
+          label: string
+          options: string[]
+          position: Json | null
+          required: boolean
+          sort_order: number
+          template_id: string
+        }
+        Insert: {
+          field_type?: string
+          id?: string
+          key: string
+          label: string
+          options?: string[]
+          position?: Json | null
+          required?: boolean
+          sort_order?: number
+          template_id: string
+        }
+        Update: {
+          field_type?: string
+          id?: string
+          key?: string
+          label?: string
+          options?: string[]
+          position?: Json | null
+          required?: boolean
+          sort_order?: number
+          template_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "template_fields_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      template_versions: {
+        Row: {
+          created_at: string
+          file_name: string
+          id: string
+          storage_path: string
+          template_id: string
+          uploaded_by: string | null
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          file_name: string
+          id?: string
+          storage_path: string
+          template_id: string
+          uploaded_by?: string | null
+          version: number
+        }
+        Update: {
+          created_at?: string
+          file_name?: string
+          id?: string
+          storage_path?: string
+          template_id?: string
+          uploaded_by?: string | null
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "template_versions_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      templates: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          current_version: number
+          description: string
+          extracted_text: string
+          file_name: string
+          file_type: string
+          id: string
+          name: string
+          status: string
+          storage_path: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          current_version?: number
+          description?: string
+          extracted_text?: string
+          file_name: string
+          file_type: string
+          id?: string
+          name: string
+          status?: string
+          storage_path: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          current_version?: number
+          description?: string
+          extracted_text?: string
+          file_name?: string
+          file_type?: string
+          id?: string
+          name?: string
+          status?: string
+          storage_path?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      admin_exists: { Args: never; Returns: boolean }
+      can_use_template: {
+        Args: { _template_id: string; _user_id: string }
+        Returns: boolean
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_active_user: { Args: { _user_id: string }; Returns: boolean }
+      is_admin: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "staff"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +482,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "staff"],
+    },
   },
 } as const
