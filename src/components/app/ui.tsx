@@ -1,5 +1,6 @@
+import type * as React from "react";
 import type { ReactNode } from "react";
-import { Construction } from "lucide-react";
+import { Construction, Inbox } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function PageHeader({ title, description, actions }: { title: string; description?: string; actions?: ReactNode }) {
@@ -66,4 +67,19 @@ export function DataTable({ head, rows }: { head: string[]; rows: ReactNode[][] 
       </table>
     </div>
   );
+}
+
+export function EmptyState({ title, text, action }: { title: string; text?: string; action?: ReactNode }) {
+  return (
+    <div className="flex flex-col items-center gap-2 rounded-xl border-2 border-dashed px-6 py-10 text-center">
+      <Inbox className="h-6 w-6 text-muted-foreground" />
+      <p className="font-semibold">{title}</p>
+      {text && <p className="max-w-md text-sm text-muted-foreground">{text}</p>}
+      {action}
+    </div>
+  );
+}
+
+export function SelectBox(props: React.SelectHTMLAttributes<HTMLSelectElement>) {
+  return <select {...props} className={cn("h-10 w-full rounded-md border border-input bg-card px-3 text-sm", props.className)} />;
 }
