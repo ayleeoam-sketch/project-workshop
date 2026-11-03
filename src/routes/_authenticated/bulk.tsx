@@ -37,14 +37,14 @@ function Bulk() {
   const [zip, setZip] = useState<Blob | null>(null);
 
   async function onFile(file: File) {
-    if (!/\.(xlsx|xls|csv)$/i.test(file.name)) return toast.error("Upload an .xlsx, .xls or .csv file");
-    if (file.size > 10 * 1024 * 1024) return toast.error("Spreadsheet must be under 10 MB");
+    if (!/\.(xlsx|xls|csv)$/i.test(file.name)) { toast.error("Upload an .xlsx, .xls or .csv file"); return; }
+    if (file.size > 10 * 1024 * 1024) { toast.error("Spreadsheet must be under 10 MB"); return; }
     const XLSX = await import("xlsx");
     const wb = XLSX.read(await file.arrayBuffer(), { type: "array", cellDates: true });
     const sheet = wb.Sheets[wb.SheetNames[0]!]!;
     const data = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, { defval: "", raw: false });
-    if (!data.length) return toast.error("No rows found in the first sheet");
-    if (data.length > 500) return toast.error("Up to 500 rows per batch");
+    if (!data.length) { toast.error("No rows found in the first sheet"); return; }
+    if (data.length > 500) { toast.error("Up to 500 rows per batch"); return; }
     const cols = Object.keys(data[0]!);
     setColumns(cols);
     setRows(data.map((r) => Object.fromEntries(Object.entries(r).map(([k, v]) => [k, String(v ?? "")]))));
@@ -63,7 +63,7 @@ function Bulk() {
   async function run() {
     if (!template || !fields || !me) return;
     const unmapped = fields.filter((f) => f.required && !mapping[f.key]);
-    if (unmapped.length) return toast.error(`Map required fields: ${unmapped.map((f) => f.label).join(", ")}`);
+    if (unmapped.length) { toast.error(`Map required fields: ${unmapped.map((f) => f.label).join(", ")}`); return; }
     setProgress(0); setResults([]); setZip(null);
     const buffer = await (await downloadFromStorage("templates", template.storage_path)).arrayBuffer();
     const JSZip = (await import("jszip")).default;

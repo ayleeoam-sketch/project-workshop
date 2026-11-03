@@ -36,7 +36,7 @@ function Documents() {
   }
   async function remove(id: string, path: string, title: string) {
     const { error } = await supabase.from("generated_documents").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     await supabase.storage.from("generated").remove([path]);
     await logActivity("Deleted document", "document", id, { title });
     toast.success("Document deleted");
